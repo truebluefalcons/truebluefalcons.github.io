@@ -8,13 +8,14 @@
   const BASE = document.body.dataset.base || '';
   const state = {
     tournament: 'all',
+    calMonth: null, // 'YYYY-MM' shown in the match calendar
     showNone: false,
     workload: 'per',
     sort: ADMIN
       ? { batting: { key: 'balls', dir: -1 }, bowling: { key: 'balls', dir: -1 } }
       : { batting: { key: 'runs', dir: -1 }, bowling: { key: 'wkts', dir: -1 } },
   };
-  let config, players, season;
+  let config, players, season, fixtures = [];
 
   // ---------------------------------------------------------------- helpers
   const $ = (id) => document.getElementById(id);
@@ -39,6 +40,8 @@
   async function boot() {
     try {
       [config, { players }, season] = await Promise.all([load(BASE + 'data/config.json'), load(BASE + 'data/players.json'), load(BASE + 'data/season.json')]);
+      // Schedule is optional: a missing or broken data/fixtures.json just hides the upcoming games.
+      fixtures = await load(BASE + 'data/fixtures.json').then((d) => d.fixtures || []).catch(() => []);
     } catch (e) {
       document.querySelector('main').innerHTML = '<div class="card empty"><strong>Could not load data</strong>' + esc(e.message) + '</div>';
       return;
@@ -330,33 +333,231 @@
   }
 
   // ---------------------------------------------------------------- matches
+  // Optional per-match recording ("video" in data/matches/<id>.json). Only https Twitch links are shown.
+  function videoUrl(v) {
+    try { const u = new URL(String(v || '')); return u.protocol === 'https:' && /(^|\.)twitch\.tv$/.test(u.hostname) ? u.href : null; }
+    catch { return null; }
+  }
+
+  // One match boiled down for display, shared by the header strip and the match cards.
+  function summarize(m) {
+    const byId = new Map(players.map((p) => [p.id, p]));
+    const who = (r) => { const p = byId.get(r.playerId); return esc(p ? short(p) : r.name); };
+    const aliases = config.teamAliases.map((a) => a.toLowerCase());
+    const ours = m.players.filter((r) => r.playerId || r.name);
+    const topBat = ours.filter((r) => r.bat).sort((a, b) => b.bat.runs - a.bat.runs || a.bat.balls - b.bat.balls)[0];
+    const topBowl = ours.filter((r) => r.bowl && r.bowl.balls).sort((a, b) => b.bowl.wickets - a.bowl.wickets || a.bowl.runs - b.bowl.runs)[0];
+    const res = m.result || '';
+    const won = /won|beat/i.test(res) && aliases.some((a) => res.toLowerCase().includes(a));
+    const lost = /won|beat/i.test(res) && !won;
+    const d = m.date ? new Date(m.date + 'T12:00:00') : null;
+    return {
+      res, won, lost,
+      outcome: won ? 'W' : lost ? 'L' : res ? '–' : '?',
+      cls: won ? 'win' : lost ? 'loss' : '',
+      date: d ? d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) : 'Date unknown',
+      dateShort: d ? d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '?',
+      bat: topBat ? who(topBat) + ' · <b class="num">' + topBat.bat.runs + (topBat.bat.notOut ? '*' : '') + '</b> (' + topBat.bat.balls + ')' : '–',
+      bowl: topBowl ? who(topBowl) + ' · <b class="num">' + topBowl.bowl.wickets + '/' + topBowl.bowl.runs + '</b> (' + esc(topBowl.bowl.overs) + ')' : '–',
+      count: new Set(ours.map((r) => r.playerId || r.name)).size,
+      video: videoUrl(m.video),
+    };
+  }
+
+  const matchAnchor = (m) => 'm-' + String(m.id).replace(/[^\w-]/g, '');
+  const scorecardLink = (m) => '<a href="' + esc(m.scorecardUrl) + '" target="_blank" rel="noopener">Scorecard ↗</a>';
+  const watchLink = (x, label) => x.video ? '<a class="video" href="' + esc(x.video) + '" target="_blank" rel="noopener">' + label + '</a>' : '';
+
+  // Scheduled games that have not started yet (plus a 4 hour grace), soonest first, for the selected tournament.
+  function upcoming() {
+    const now = Date.now();
+    const ours = (t) => config.teamAliases.some((a) => a.toLowerCase() === String(t || '').toLowerCase());
+    return fixtures
+      .filter((f) => f.date && (state.tournament === 'all' || f.tournament === state.tournament))
+      .map((f) => ({ ...f, at: new Date(f.date + 'T' + (f.time || '12:00')), opponent: ours(f.teamOne) ? f.teamTwo : f.teamOne }))
+      .filter((f) => !isNaN(f.at) && f.at.getTime() + 4 * 3600e3 > now)
+      .sort((a, b) => a.at - b.at);
+  }
+  const fxDay = (f) => f.at.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', ...(f.at.getFullYear() !== new Date().getFullYear() ? { year: 'numeric' } : {}) });
+  const fxTime = (f) => f.time ? (f.timeLabel ? f.timeLabel + ' ' : '') + f.at.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) : '';
+
+  // Last five results, oldest to newest, and the current run of wins or losses.
+  function formLine(list) {
+    const res = list.map((m) => summarize(m)).filter((x) => x.won || x.lost);
+    if (res.length < 2) return '';
+    const five = res.slice(0, 5).reverse();
+    let run = 0;
+    while (run < res.length && res[run].won === res[0].won) run++;
+    const word = res[0].won ? (run === 1 ? 'win' : 'wins') : (run === 1 ? 'loss' : 'losses');
+    const streak = run === 1 ? (res[0].won ? 'Won the last game' : 'Lost the last game') : run + ' ' + word + ' in a row';
+    return '<div class="fx-form"><small>Form</small><span class="fx-form-chips">' +
+      five.map((x, i) => '<span class="fx-out xs ' + x.cls + (i === five.length - 1 ? ' last' : '') + '">' + x.outcome + '</span>').join('') +
+      '</span><span class="fx-streak">' + esc(streak) + '</span></div>';
+  }
+
+  // Header: in time order, the last result (left) and the next game (right). Everything else is in the calendar.
+  function renderStrip(agg) {
+    const el = $('fixtures');
+    if (!el) return;
+    const list = agg.matches.slice().reverse();
+    const coming = upcoming();
+    const [next, after] = coming;
+    if (!list.length && !next) { el.innerHTML = ''; el.hidden = true; return; }
+    el.hidden = false;
+    el.classList.toggle('solo', !list.length || !next);
+    let html = '';
+    if (list.length) {
+      const latest = list[0];
+      const x = summarize(latest);
+      html +=
+        '<article class="fx-latest">' +
+          '<div class="fx-top"><span class="fx-kicker">Last result</span><span>' + esc(x.date) + '</span><span class="tbadge ' + esc(latest.tournament) + '">' + esc(tName(latest.tournament)) + '</span></div>' +
+          '<div class="fx-vs"><span class="fx-out ' + x.cls + '">' + x.outcome + '</span><span><small>vs</small> ' + esc(latest.opponent || 'Opponent') + '</span></div>' +
+          (x.res ? '<div class="fx-res ' + x.cls + '">' + esc(x.res) + '</div>' : '') +
+          formLine(list) +
+          '<div class="fx-perf"><div><small>Top bat</small>' + x.bat + '</div><div><small>Top bowl</small>' + x.bowl + '</div></div>' +
+          '<div class="fx-links">' + watchLink(x, '▶ Watch on Twitch') + scorecardLink(latest) + '<a href="#matches">All matches ↓</a></div>' +
+        '</article>';
+    }
+    if (next) {
+      const dayNum = next.at.getDate();
+      const mon = next.at.toLocaleDateString(undefined, { month: 'short' });
+      const wk = next.at.toLocaleDateString(undefined, { weekday: 'long' });
+      html +=
+        '<article class="fx-upnext">' +
+          '<div class="fx-top"><span class="fx-kicker">Next match</span><span class="tbadge ' + esc(next.tournament) + '">' + esc(tName(next.tournament)) + '</span></div>' +
+          '<div class="fx-date"><span class="fx-day">' + dayNum + '</span><span class="fx-mon">' + esc(mon) + '<small>' + esc(wk) + '</small></span></div>' +
+          '<div class="fx-vs sm"><span><small>vs</small> ' + esc(next.opponent || 'TBC') + '</span></div>' +
+          '<div class="fx-when">' + esc([fxTime(next), next.ground].filter(Boolean).join(' · ')) + '</div>' +
+          (after ? '<div class="fx-after">Then ' + esc(fxDay(after)) + ' vs ' + esc(after.opponent || 'TBC') + ' (' + esc(tName(after.tournament)) + ')</div>' : '') +
+          '<div class="fx-links"><a href="#calendar">Full calendar ↓</a></div>' +
+        '</article>';
+    }
+    el.innerHTML = html;
+  }
+
+  // ---------------------------------------------------------------- calendar
+  // One month at a time: played games (W/L, linking to their card) and scheduled ones, with the
+  // month's games listed under the grid so it still reads well on a phone.
+  function calendarEvents(agg) {
+    const played = agg.matches.map((m) => {
+      const x = summarize(m);
+      return { kind: 'played', date: m.date, tournament: m.tournament, opponent: m.opponent, x, anchor: '#' + matchAnchor(m), m };
+    }).filter((e) => e.date);
+    const seen = new Set(played.map((e) => e.date + '|' + e.tournament));
+    const ours = (t) => config.teamAliases.some((a) => a.toLowerCase() === String(t || '').toLowerCase());
+    const now = Date.now();
+    const sched = fixtures
+      .filter((f) => f.date && (state.tournament === 'all' || f.tournament === state.tournament) && !seen.has(f.date + '|' + f.tournament))
+      .map((f) => {
+        const at = new Date(f.date + 'T' + (f.time || '12:00'));
+        return { ...f, at, kind: at.getTime() + 4 * 3600e3 > now ? 'upcoming' : 'pending', opponent: ours(f.teamOne) ? f.teamTwo : f.teamOne };
+      });
+    return played.concat(sched).sort((a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || '')));
+  }
+
+  function renderCalendar(agg) {
+    const el = $('calendar');
+    if (!el) return;
+    const events = calendarEvents(agg);
+    if (!events.length) { el.hidden = true; el.innerHTML = ''; return; }
+    el.hidden = false;
+    events.forEach((e, i) => { e.id = 'cal-' + e.date + '-' + i; });
+    const months = [...new Set(events.map((e) => e.date.slice(0, 7)))].sort();
+    const first = months[0], last = months[months.length - 1];
+    if (!state.calMonth || state.calMonth < first || state.calMonth > last) {
+      const next = events.find((e) => e.kind === 'upcoming');
+      state.calMonth = (next || events[events.length - 1]).date.slice(0, 7);
+    }
+    const [y, mo] = state.calMonth.split('-').map(Number);
+    const inMonth = events.filter((e) => e.date.slice(0, 7) === state.calMonth);
+    const byDay = new Map();
+    inMonth.forEach((e) => { const d = Number(e.date.slice(8, 10)); byDay.set(d, (byDay.get(d) || []).concat(e)); });
+    const offset = new Date(y, mo - 1, 1).getDay();
+    const days = new Date(y, mo, 0).getDate();
+    const t = new Date();
+    const todayKey = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+    const label = new Date(y, mo - 1, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+    const dow = [...Array(7)].map((_, i) => new Date(2026, 10, 1 + i).toLocaleDateString(undefined, { weekday: 'short' }));
+
+    const chip = (e) => {
+      const cls = 'cal-chip t-' + esc(e.tournament) + ' ' + e.kind + (e.kind === 'played' ? ' ' + e.x.cls : '');
+      const tag = e.kind === 'played' ? e.x.outcome : e.kind === 'pending' ? '?' : esc(tName(e.tournament));
+      const href = e.kind === 'played' ? e.anchor : '#' + e.id;
+      const title = (e.kind === 'played' ? e.x.res : (fxTime(e) ? fxTime(e) + ' · ' : '') + (e.ground || '')) ;
+      return '<a class="' + cls + '" href="' + href + '" title="' + esc('vs ' + (e.opponent || 'TBC') + (title ? ' · ' + title : '')) + '"><b>' + tag + '</b><span>' + esc(e.opponent || 'TBC') + '</span></a>';
+    };
+    let cells = '';
+    for (let i = 0; i < offset; i++) cells += '<div class="cal-day blank" aria-hidden="true"></div>';
+    for (let d = 1; d <= days; d++) {
+      const key = state.calMonth + '-' + String(d).padStart(2, '0');
+      const evs = byDay.get(d) || [];
+      cells += '<div class="cal-day' + (evs.length ? ' has' : '') + (key === todayKey ? ' today' : '') + (key < todayKey ? ' past' : '') + '">' +
+        '<span class="cal-num">' + d + '</span>' + evs.map(chip).join('') + '</div>';
+    }
+    const tail = (7 - ((offset + days) % 7)) % 7;
+    for (let i = 0; i < tail; i++) cells += '<div class="cal-day blank" aria-hidden="true"></div>';
+
+    const row = (e) => {
+      const day = new Date(e.date + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+      return '<li class="card up-row cal-row ' + e.kind + '" id="' + e.id + '">' +
+        '<span class="up-when"><b>' + esc(day) + '</b><small>' + (e.kind === 'pending' ? 'Result to come' : esc(fxTime(e))) + '</small></span>' +
+        '<span class="up-vs"><small>vs</small> ' + esc(e.opponent || 'TBC') + '</span>' +
+        '<span class="up-meta">' + esc([e.ground, e.division].filter(Boolean).join(' · ')) + '</span>' +
+        '<span class="tbadge ' + esc(e.tournament) + '">' + esc(tName(e.tournament)) + '</span></li>';
+    };
+    const left = events.filter((e) => e.kind === 'upcoming').length;
+    // Played games already have result cards below; the list only adds the games still to come.
+    const toPlay = inMonth.filter((e) => e.kind !== 'played');
+
+    el.innerHTML =
+      '<div class="card cal-card">' +
+        '<div class="cal-head">' +
+          '<button type="button" class="cal-nav" data-step="-1" aria-label="Previous month"' + (state.calMonth <= first ? ' hidden' : '') + '>‹</button>' +
+          '<h3 aria-live="polite">' + esc(label) + '</h3>' +
+          '<button type="button" class="cal-nav" data-step="1" aria-label="Next month"' + (state.calMonth >= last ? ' hidden' : '') + '>›</button>' +
+          '<span class="cal-sum">' + left + ' to play</span>' +
+        '</div>' +
+        '<div class="cal-grid" role="grid">' + dow.map((d) => '<div class="cal-dow">' + esc(d) + '</div>').join('') + cells + '</div>' +
+        '<p class="cal-legend"><span class="cal-chip played win"><b>W</b></span> won <span class="cal-chip played loss"><b>L</b></span> lost <span class="cal-chip upcoming t-mcl"><b>MCL</b></span><span class="cal-chip upcoming t-lakeshore"><b>LCL</b></span> to play</p>' +
+      '</div>' +
+      (toPlay.length
+        ? '<h4 class="cal-sub">Still to play in ' + esc(new Date(y, mo - 1, 1).toLocaleDateString(undefined, { month: 'long' })) + '</h4><ol class="up-list cal-list">' + toPlay.map(row).join('') + '</ol>'
+        : !inMonth.length ? '<p class="muted cal-none">No games this month.</p>' : '') +
+      '<h3 class="cal-results">Results</h3>';
+
+    if (!el.dataset.wired) {
+      el.dataset.wired = '1';
+      el.addEventListener('click', (ev) => {
+        const b = ev.target.closest('.cal-nav');
+        if (!b) return;
+        const [yy, mm] = state.calMonth.split('-').map(Number);
+        const d = new Date(yy, mm - 1 + Number(b.dataset.step), 1);
+        state.calMonth = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+        renderCalendar(S.aggregate(season, players, state.tournament));
+      });
+    }
+  }
+
   function renderMatches(agg) {
+    renderStrip(agg);
+    renderCalendar(agg);
     const list = agg.matches.slice().reverse();
     if (!list.length) {
       $('match-list').innerHTML = '<div class="card empty" style="grid-column:1/-1"><strong>No matches yet</strong>' + (ADMIN ? 'Add the first one with the form above.' : 'Matches appear here as they are added.') + '</div>';
       return;
     }
-    const byId = new Map(players.map((p) => [p.id, p]));
-    const who = (r) => { const p = byId.get(r.playerId); return esc(p ? short(p) : r.name); };
-    const aliases = config.teamAliases.map((a) => a.toLowerCase());
     $('match-list').innerHTML = list.map((m) => {
-      const ours = m.players.filter((r) => r.playerId || r.name);
-      const topBat = ours.filter((r) => r.bat).sort((a, b) => b.bat.runs - a.bat.runs || a.bat.balls - b.bat.balls)[0];
-      const topBowl = ours.filter((r) => r.bowl && r.bowl.balls).sort((a, b) => b.bowl.wickets - a.bowl.wickets || a.bowl.runs - b.bowl.runs)[0];
-      const res = m.result || '';
-      const won = /won|beat/i.test(res) && aliases.some((a) => res.toLowerCase().includes(a));
-      const lost = /won|beat/i.test(res) && !won;
-      const date = m.date ? new Date(m.date + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) : 'Date unknown';
-      return '<article class="card mcard">' +
-        '<div class="row1"><span>' + esc(date) + '</span><span class="tbadge ' + esc(m.tournament) + '">' + esc(tName(m.tournament)) + '</span></div>' +
+      const x = summarize(m);
+      return '<article class="card mcard" id="' + matchAnchor(m) + '">' +
+        '<div class="row1"><span>' + esc(x.date) + '</span><span class="tbadge ' + esc(m.tournament) + '">' + esc(tName(m.tournament)) + '</span></div>' +
         '<div class="vs"><span>vs</span> ' + esc(m.opponent || 'Opponent') + '</div>' +
-        (res ? '<div class="res ' + (won ? 'win' : lost ? 'loss' : '') + '">' + esc(res) + '</div>' : '') +
+        (x.res ? '<div class="res ' + x.cls + '">' + esc(x.res) + '</div>' : '') +
         '<div class="perf">' +
-        '<div><small>Top bat</small>' + (topBat ? who(topBat) + ' · <b class="num">' + topBat.bat.runs + (topBat.bat.notOut ? '*' : '') + '</b> (' + topBat.bat.balls + ')' : '–') + '</div>' +
-        '<div><small>Top bowl</small>' + (topBowl ? who(topBowl) + ' · <b class="num">' + topBowl.bowl.wickets + '/' + topBowl.bowl.runs + '</b> (' + esc(topBowl.bowl.overs) + ')' : '–') + '</div>' +
+        '<div><small>Top bat</small>' + x.bat + '</div>' +
+        '<div><small>Top bowl</small>' + x.bowl + '</div>' +
         '</div>' +
-        '<div class="links"><span class="muted">' + new Set(ours.map((r) => r.playerId || r.name)).size + ' players</span>' +
-        '<a href="' + esc(m.scorecardUrl) + '" target="_blank" rel="noopener">Scorecard ↗</a></div>' +
+        '<div class="links"><span class="muted">' + x.count + ' players</span>' + scorecardLink(m) + watchLink(x, '▶ Watch on Twitch') + '</div>' +
         '</article>';
     }).join('');
   }

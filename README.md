@@ -54,6 +54,8 @@ A match is added only if:
 |---|---|
 | A player fielded but neither batted nor bowled, and is missing from the card | Add `"extraPlayers": ["player-id"]` to that match's file in `data/matches/` |
 | Wrong date | Add `"dateOverride": "2026-06-14"` to the match file |
+| New schedule from the league | Add the club's games to `data/fixtures.json` (`date`, `time` as 24h Toronto time, `tournament`, `teamOne`, `teamTwo`, `ground`, and `"timeLabel": "Toss"` when the listed time is the toss). Games that have started drop off the *Upcoming* list on their own |
+| Match was streamed | Add `"video": "https://www.twitch.tv/videos/<id>"` to the match file, then `npm run build-season`. The match card shows a *Watch on Twitch* link |
 | Roster or tier change | Edit `data/players.json` (`tier`: `full`, `half` or `none`) |
 | Player only fielded, at the time of adding | Tick them under *Also played* on the admin page before saving |
 | Parser improved and you want to re-read old matches | `node scripts/ingest.mjs --url <link> --reparse` re-reads the raw page saved in `data/raw/` |

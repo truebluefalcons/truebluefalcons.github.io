@@ -1,0 +1,246 @@
+{
+ "note": "True Blue Falcons games from the CricClubs schedules: MCL (26-27 Super 90 Winter Indoor League) and Lakeshore (T12 LCL Winter Season 2026-27). Times are Toronto local; timeLabel 'Toss' means the listed time is the toss. Games that have started are hidden on the page automatically.",
+ "fixtures": [
+  {
+   "date": "2026-10-31",
+   "time": "20:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "Hunters CC",
+   "teamTwo": "True Blue Falcons",
+   "ground": "MD-Pitch 4"
+  },
+  {
+   "date": "2026-11-14",
+   "time": "22:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "Toronto Galacticos",
+   "teamTwo": "True Blue Falcons",
+   "ground": "MD-Pitch 4"
+  },
+  {
+   "date": "2026-11-21",
+   "time": "22:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "Toronto Galacticos",
+   "teamTwo": "True Blue Falcons",
+   "ground": "MD-Pitch 3"
+  },
+  {
+   "date": "2026-11-26",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "Trutalk Dharundar",
+   "teamTwo": "True Blue Falcons",
+   "ground": "Milton Field 4"
+  },
+  {
+   "date": "2026-12-15",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "Punjab Warriors CC",
+   "teamTwo": "True Blue Falcons",
+   "ground": "Milton Field 3"
+  },
+  {
+   "date": "2026-12-19",
+   "time": "20:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "HCC Northern Falcons",
+   "ground": "MD-Pitch 3"
+  },
+  {
+   "date": "2026-12-22",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "Gabroos, Eagles",
+   "ground": "Milton Field 4"
+  },
+  {
+   "date": "2027-01-07",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "Maple Leaf Mavericks",
+   "ground": "Milton Field 4"
+  },
+  {
+   "date": "2027-01-16",
+   "time": "22:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "Jazba Junoon",
+   "ground": "MD-Pitch 3"
+  },
+  {
+   "date": "2027-01-21",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "Gabroos, Eagles",
+   "teamTwo": "True Blue Falcons",
+   "ground": "Milton Field 4"
+  },
+  {
+   "date": "2027-01-23",
+   "time": "20:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "Delhi Dashers",
+   "teamTwo": "True Blue Falcons",
+   "ground": "MD-Pitch 2"
+  },
+  {
+   "date": "2027-01-26",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "Chargers, Eagles",
+   "teamTwo": "True Blue Falcons",
+   "ground": "Milton Field 3"
+  },
+  {
+   "date": "2027-02-02",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "Tigers, Eagles",
+   "teamTwo": "True Blue Falcons",
+   "ground": "Milton Field 4"
+  },
+  {
+   "date": "2027-02-06",
+   "time": "20:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "Thalaivas CC",
+   "ground": "MD-Pitch 3"
+  },
+  {
+   "date": "2027-02-13",
+   "time": "20:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "Hunters CC",
+   "teamTwo": "True Blue Falcons",
+   "ground": "MD-Pitch 2"
+  },
+  {
+   "date": "2027-02-25",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "Trutalk Dharundar",
+   "ground": "Milton Field 3"
+  },
+  {
+   "date": "2027-03-04",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "Chargers, Eagles",
+   "ground": "Milton Field 4"
+  },
+  {
+   "date": "2027-03-06",
+   "time": "22:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "LCS Mississauga Royals",
+   "teamTwo": "True Blue Falcons",
+   "ground": "MD-Pitch 2"
+  },
+  {
+   "date": "2027-03-11",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "Punjab Warriors CC",
+   "ground": "Milton Field 4"
+  },
+  {
+   "date": "2027-03-16",
+   "time": "22:15",
+   "timeLabel": "Toss",
+   "tournament": "lakeshore",
+   "series": "T12 LCL Winter Season 2026-27",
+   "division": "Maple Division 2026-27",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "Warriors, Eagles",
+   "ground": "Milton Field 4"
+  },
+  {
+   "date": "2027-03-20",
+   "time": "22:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "Jazba Junoon",
+   "ground": "MD-Pitch 2"
+  },
+  {
+   "date": "2027-04-10",
+   "time": "20:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "LCS Mississauga Royals",
+   "teamTwo": "True Blue Falcons",
+   "ground": "MD-Pitch 4"
+  },
+  {
+   "date": "2027-04-10",
+   "time": "22:00",
+   "tournament": "mcl",
+   "series": "26-27 Super 90 Winter Indoor League",
+   "division": "S90-Division 3",
+   "teamOne": "True Blue Falcons",
+   "teamTwo": "HCC Northern Falcons",
+   "ground": "MD-Pitch 4"
+  }
+ ]
+}

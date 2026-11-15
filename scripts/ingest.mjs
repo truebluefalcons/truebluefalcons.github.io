@@ -130,6 +130,7 @@ async function main() {
     parsedAt: prev.parsedAt || new Date().toISOString(),
     ...parsed,
     ...(prev.extraPlayers ? { extraPlayers: prev.extraPlayers } : {}),
+    ...(prev.video ? { video: prev.video } : {}),
     ...(prev.dateOverride ? { date: prev.dateOverride, dateOverride: prev.dateOverride } : {}),
   };
   writeFileSync(matchPath, JSON.stringify(record, null, 1) + '\n');
