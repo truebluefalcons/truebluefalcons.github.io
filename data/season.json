@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-11T06:31:42.247Z",
+ "generatedAt": "2026-11-15T04:58:44.919Z",
  "unmatchedNames": [],
  "matches": [
   {
@@ -394,6 +394,242 @@
       "wickets": 1,
       "wides": 3,
       "noballs": 0,
+      "dots": 0
+     }
+    }
+   ]
+  },
+  {
+   "id": "mississaugacricketleague-8574",
+   "matchId": 8574,
+   "clubId": 2565,
+   "league": "MississaugaCricketLeague",
+   "tournament": "mcl",
+   "scorecardUrl": "https://cricclubs.com/MississaugaCricketLeague/fullScorecard.do?clubId=2565&matchId=8574",
+   "parsedAt": "2026-11-15T04:58:44.914Z",
+   "source": "pdf",
+   "title": null,
+   "date": "2026-11-14",
+   "teams": [
+    "True Blue Falcons",
+    "Toronto Galacticos"
+   ],
+   "opponent": "Toronto Galacticos",
+   "result": "Toronto Galacticos won by 5 Wickets",
+   "notes": [],
+   "players": [
+    {
+     "name": "Hardik Manchanda",
+     "playerId": "hardik-manchanda",
+     "batted": true,
+     "bowled": false,
+     "bat": {
+      "pos": 1,
+      "runs": 6,
+      "balls": 4,
+      "fours": 0,
+      "sixes": 1,
+      "notOut": false,
+      "dismissal": "b Manav K"
+     }
+    },
+    {
+     "name": "Shayan Amin",
+     "playerId": "shayan-amin",
+     "batted": true,
+     "bowled": false,
+     "bat": {
+      "pos": 2,
+      "runs": 65,
+      "balls": 49,
+      "fours": 3,
+      "sixes": 7,
+      "notOut": false,
+      "dismissal": "b Manav K"
+     }
+    },
+    {
+     "name": "Jaideep Bajwa",
+     "playerId": "jaideep-bajwa",
+     "batted": true,
+     "bowled": true,
+     "bat": {
+      "pos": 3,
+      "runs": 10,
+      "balls": 14,
+      "fours": 0,
+      "sixes": 0,
+      "notOut": false,
+      "dismissal": "b AMAN B"
+     },
+     "bowl": {
+      "overs": "2",
+      "balls": 12,
+      "maidens": 0,
+      "runs": 32,
+      "wickets": 1,
+      "wides": 0,
+      "noballs": 0,
+      "dots": 0
+     }
+    },
+    {
+     "name": "Omkar Bhilare",
+     "playerId": "omkar-bhilare",
+     "batted": true,
+     "bowled": true,
+     "bat": {
+      "pos": 4,
+      "runs": 34,
+      "balls": 17,
+      "fours": 1,
+      "sixes": 2,
+      "notOut": false,
+      "dismissal": "ro Romil P"
+     },
+     "bowl": {
+      "overs": "1",
+      "balls": 6,
+      "maidens": 0,
+      "runs": 7,
+      "wickets": 0,
+      "wides": 0,
+      "noballs": 0,
+      "dots": 0
+     }
+    },
+    {
+     "name": "Shailin Gosalia",
+     "playerId": "shailin-gosalia",
+     "batted": true,
+     "bowled": false,
+     "bat": {
+      "pos": 5,
+      "runs": 0,
+      "balls": 1,
+      "fours": 0,
+      "sixes": 0,
+      "notOut": false,
+      "dismissal": "b Love G"
+     }
+    },
+    {
+     "name": "Sadan Amin",
+     "playerId": "sadan-amin",
+     "batted": true,
+     "bowled": true,
+     "bat": {
+      "pos": 6,
+      "runs": 4,
+      "balls": 5,
+      "fours": 0,
+      "sixes": 0,
+      "notOut": false,
+      "dismissal": "ro AMAN B"
+     },
+     "bowl": {
+      "overs": "0.3",
+      "balls": 3,
+      "maidens": 0,
+      "runs": 8,
+      "wickets": 0,
+      "wides": 0,
+      "noballs": 0,
+      "dots": 0
+     }
+    },
+    {
+     "name": "Chirag Sethi",
+     "playerId": "chirag-sethi",
+     "batted": true,
+     "bowled": false,
+     "bat": {
+      "pos": 7,
+      "runs": 0,
+      "balls": 0,
+      "fours": 0,
+      "sixes": 0,
+      "notOut": true,
+      "dismissal": ""
+     }
+    },
+    {
+     "name": "Rajat Kumar Sinha",
+     "playerId": "rajat-kumar-sinha",
+     "batted": false,
+     "bowled": true,
+     "bowl": {
+      "overs": "3",
+      "balls": 18,
+      "maidens": 0,
+      "runs": 10,
+      "wickets": 1,
+      "wides": 0,
+      "noballs": 1,
+      "dots": 0
+     }
+    },
+    {
+     "name": "Zohaib Hassan",
+     "playerId": "zohaib-hassan",
+     "batted": false,
+     "bowled": true,
+     "bowl": {
+      "overs": "3",
+      "balls": 18,
+      "maidens": 0,
+      "runs": 33,
+      "wickets": 1,
+      "wides": 0,
+      "noballs": 0,
+      "dots": 0
+     }
+    },
+    {
+     "name": "Aayush Asthana",
+     "playerId": "aayush-asthana",
+     "batted": false,
+     "bowled": true,
+     "bowl": {
+      "overs": "1.2",
+      "balls": 8,
+      "maidens": 0,
+      "runs": 30,
+      "wickets": 0,
+      "wides": 0,
+      "noballs": 2,
+      "dots": 0
+     }
+    },
+    {
+     "name": "Hritik Kumar Advani",
+     "playerId": "hritik-kumar-advani",
+     "batted": false,
+     "bowled": true,
+     "bowl": {
+      "overs": "3",
+      "balls": 18,
+      "maidens": 0,
+      "runs": 18,
+      "wickets": 0,
+      "wides": 0,
+      "noballs": 1,
+      "dots": 0
+     }
+    },
+    {
+     "name": "Vishal Radhakrishnan",
+     "playerId": "vishal-radhakrishnan",
+     "batted": false,
+     "bowled": true,
+     "bowl": {
+      "overs": "0.4",
+      "balls": 4,
+      "maidens": 0,
+      "runs": 3,
+      "wickets": 0,
+      "wides": 0,
+      "noballs": 3,
       "dots": 0
      }
     }
