@@ -9,7 +9,7 @@
   "totalMatches": 24,
   "playersPerSide": 11,
   "ballsPerOver": 6,
-  "logo": "assets/logo.svg",
+  "logo": "assets/logo.png",
   "tiers": {
     "full": {
       "label": "Full member",

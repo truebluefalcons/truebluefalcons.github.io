@@ -1,27 +1,27 @@
 :root {
-  --navy-950: #050f26;
-  --navy-900: #0a1b3f;
-  --navy-800: #0f2a5f;
-  --blue-700: #1746b5;
-  --blue-600: #1f5fd6;
-  --blue-500: #2f74f0;
-  --blue-400: #5c97ff;
-  --blue-300: #93bbff;
-  --blue-100: #e3edff;
-  --blue-50: #f2f6ff;
-  --gold: #f2b632;
+  --navy-950: #040c2a;
+  --navy-900: #08174a;
+  --navy-800: #0c2a72;
+  --blue-700: #0d3f8f;
+  --blue-600: #1555b0;
+  --blue-500: #1f6fcc;
+  --blue-400: #3d8fe6;
+  --blue-300: #8ec2f5;
+  --blue-100: #e1edfb;
+  --blue-50: #f1f6fd;
+  --gold: #c9a96e;
   --ok: #138a52;
   --warn: #c27a00;
-  --bad: #c8372f;
+  --bad: #c0272d;
 
-  --bg: #f4f7fd;
+  --bg: #f7f5ef;
   --surface: #ffffff;
   --surface-2: #f2f6ff;
-  --border: #dbe4f5;
-  --text: #0c1a36;
+  --border: #e2dccd;
+  --text: #0a1838;
   --muted: #5a6a8a;
   --bar-bat: var(--blue-600);
-  --bar-bowl: #19a7c9;
+  --bar-bowl: #c9a96e;
   --shadow: 0 1px 2px rgba(10, 27, 63, 0.06), 0 8px 24px rgba(10, 27, 63, 0.06);
   --radius: 14px;
 
@@ -32,14 +32,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #071027;
-    --surface: #0d1a39;
+    --bg: #050d2b;
+    --surface: #0b1a45;
     --surface-2: #112352;
-    --border: #1f3266;
+    --border: #23366e;
     --text: #e6eeff;
     --muted: #96a8cf;
     --bar-bat: var(--blue-400);
-    --bar-bowl: #3cc6e6;
+    --bar-bowl: #d8bf8c;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
     --blue-50: #0f2049;
     --blue-100: #16306b;
@@ -67,8 +67,8 @@ a { color: var(--blue-500); }
   position: relative;
   color: #fff;
   background:
-    radial-gradient(1200px 400px at 85% -10%, rgba(92, 151, 255, 0.45), transparent 60%),
-    radial-gradient(800px 300px at -10% 110%, rgba(31, 95, 214, 0.5), transparent 60%),
+    radial-gradient(1200px 400px at 85% -10%, rgba(61, 143, 230, 0.40), transparent 60%),
+    radial-gradient(800px 300px at -10% 110%, rgba(201, 169, 110, 0.28), transparent 60%),
     linear-gradient(160deg, var(--navy-800), var(--navy-950));
   overflow: hidden;
   padding: 36px 0 28px;
@@ -80,6 +80,7 @@ a { color: var(--blue-500); }
   background: repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 22px);
   pointer-events: none;
 }
+.hero { border-bottom: 3px solid var(--gold); }
 .hero-inner { position: relative; display: flex; align-items: center; gap: 22px; }
 .crest { width: 88px; height: auto; flex: none; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35)); }
 .eyebrow {
@@ -95,7 +96,7 @@ a { color: var(--blue-500); }
   letter-spacing: 0.01em;
   text-transform: uppercase;
 }
-.hero h1 span { color: var(--blue-300); }
+.hero h1 span { color: var(--gold); }
 .hero .sub { margin: 8px 0 0; color: #c9d8f7; max-width: 52ch; }
 
 .kpis {
@@ -116,7 +117,7 @@ a { color: var(--blue-500); }
 .kpi .v small { font-size: 16px; color: var(--blue-300); font-weight: 600; }
 .kpi .l { font-size: 12px; color: #b8c9ee; margin-top: 4px; }
 .kpi .meter { height: 4px; border-radius: 4px; background: rgba(255, 255, 255, 0.15); margin-top: 8px; overflow: hidden; }
-.kpi .meter i { display: block; height: 100%; background: linear-gradient(90deg, var(--blue-400), #8fd3ff); border-radius: 4px; }
+.kpi .meter i { display: block; height: 100%; background: linear-gradient(90deg, var(--blue-400), var(--gold)); border-radius: 4px; }
 
 /* ------------------------------------------------------------------ toolbar */
 .toolbar {
@@ -156,7 +157,7 @@ a { color: var(--blue-500); }
   border-radius: 999px;
   cursor: pointer;
 }
-.seg button[aria-pressed='true'] { background: var(--blue-600); color: #fff; box-shadow: 0 2px 6px rgba(31, 95, 214, 0.35); }
+.seg button[aria-pressed='true'] { background: var(--blue-600); color: #fff; box-shadow: 0 2px 6px rgba(21, 85, 176, 0.35); }
 .switch { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); cursor: pointer; user-select: none; }
 .switch input { appearance: none; width: 34px; height: 20px; border-radius: 999px; background: var(--border); position: relative; cursor: pointer; transition: background 0.15s; margin: 0; }
 .switch input::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform 0.15s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
